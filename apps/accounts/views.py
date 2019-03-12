@@ -47,6 +47,7 @@ def get_auth_token(request):
     response_data = {"token": "{}".format(token)}
     return Response(response_data, status=status.HTTP_200_OK)
 
+
 @throttle_classes([ResendEmailThrottle])
 @api_view(['POST'])
 @permission_classes((permissions.IsAuthenticated,))
@@ -58,3 +59,4 @@ def resend_email_confirmation(request):
     user = request.user
     send_email_confirmation(request._request, user)
     return Response(status=status.HTTP_200_OK)
+    
