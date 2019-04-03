@@ -1,3 +1,4 @@
+
 import json
 import os
 import shutil
@@ -16,8 +17,9 @@ from challenges.models import (
     DatasetSplit,
     Leaderboard,
     LeaderboardData,
+    UserInvitation,
 )
-from hosts.models import ChallengeHostTeam
+from hosts.models import ChallengeHostTeam, ChallengeHost
 from jobs.models import Submission
 from participants.models import ParticipantTeam
 
@@ -257,3 +259,36 @@ class LeaderboardDataTestCase(BaseTestCase):
             "{0} : {1}".format(self.challenge_phase_split, self.submission),
             self.leaderboard_data.__str__(),
         )
+
+
+class UserInvitationTestCase(BaseTestCase):
+    def setUp(self):
+        super(UserInvitationTestCase, self).setUp()
+
+        self.user = User.objects.create(
+            username="user", email="user@test.com", password="password"
+        )
+        self.challenge_host_team = ChallengeHostTeam.objects.create(
+            team_name ="Test Challenge Host Team", created_by=self.user
+        )
+        self.challenge_host = ChallengeHost.objects.create(
+            user=self.user,
+            team_name=self.challenge_host_team,
+            status=ChallengeHost.ACCEPTED,
+            permissions=ChallengeHost.ADMIN,
+        )
+
+        self.invite_user =  UserInvitation.objects.create(
+            email='user@test.com',
+            invitation_key= 'User_key',
+            status=(ACCEPTED, ACCEPTED),
+            user=self.user,
+            challenge=self.challenge,
+            invited_by=self.challenge_host,
+        )    
+            # complete invitation key and parameter
+            #pass output comparision with test_str
+
+
+    def test_str_(self):
+        self.assertEqual(self.user_email.email, self.user_email.__str__(),)
